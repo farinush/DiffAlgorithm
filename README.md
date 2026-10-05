@@ -1,75 +1,54 @@
-# React + TypeScript + Vite
+# Diff Algorithm Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive React + TypeScript demo of the Longest Common Subsequence (LCS) algorithm — the same core idea behind `git diff` and the list-reconciliation logic React uses when rendering `.map()` output.
 
-Currently, two official plugins are available:
+LiveDemo : https://diff-algorithm.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Why this project
 
-## React Compiler
+I wanted to actually understand how tools I use every day — Git, React — decide what changed between two versions of something, instead of just trusting that they get it right. The naive approach (comparing items by position) breaks the moment something is inserted or removed from the middle of a list; LCS is the fix, and it's simple enough to implement from scratch and see exactly how it works.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What it does
 
-## Expanding the ESLint configuration
+- Two editable text areas (`before` / `after`), one item per line
+- A live diff view showing which lines are unchanged, removed, or added — computed with a from-scratch LCS implementation, not a library
+- A short explanation connecting the algorithm directly to why React needs a stable, real `key` (not array index) to correctly reconcile list items instead of treating a shifted item as an entirely new one
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React (hooks only: `useState`, `useMemo`)
+- TypeScript
+- Tailwind CSS
+- No diff libraries — the LCS algorithm is implemented from scratch
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## How it works
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```ts
+function diffLines(a: string[], b: string[]): DiffLine[] {
+  const n = a.length, m = b.length;
+  // dp[i][j] = length of the LCS between a[i..] and b[j..]
+  const dp: number[][] = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) {
+    for (let j = m - 1; j >= 0; j--) {
+      dp[i][j] = a[i] === b[j] ? dp[i+1][j+1] + 1 : Math.max(dp[i+1][j], dp[i][j+1]);
+    }
+  }
+  // walk the table to reconstruct same / removed / added lines
+  ...
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+The DP table stores, for every pair of remaining suffixes, how long their longest common subsequence is. Walking it from the start produces the actual sequence of "same / removed / added" operations — this is a simplified version of what `git diff` runs internally (real Git uses the more optimized Myers diff algorithm, built on the same underlying idea).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Running locally
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
+
+## What I'd improve next
+
+- Implement the actual Myers diff algorithm and compare its output/performance against this simpler LCS version
+- Add word-level (not just line-level) diffing, like what GitHub shows for a single changed line
+- Visualize the DP table itself, the way the Levenshtein demo in this series does
