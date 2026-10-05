@@ -6,7 +6,7 @@ LiveDemo : https://diff-algorithm.vercel.app/
 
 ## Why this project
 
-I wanted to actually understand how tools I use every day, Git, React decide what changed between two versions of something, instead of just trusting that they get it right. The naive approach (comparing items by position) breaks the moment something is inserted or removed from the middle of a list; LCS is the fix, and it's simple enough to implement from scratch and see exactly how it works.
+I wanted to actually understand how tools I use every day: Git, React decide what changed between two versions of something, instead of just trusting that they get it right. The naive approach (comparing items by position) breaks the moment something is inserted or removed from the middle of a list; LCS is the fix, and it's simple enough to implement from scratch and see exactly how it works.
 
 ## What it does
 
