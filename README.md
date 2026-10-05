@@ -1,17 +1,17 @@
 # Diff Algorithm Demo
 
-An interactive React + TypeScript demo of the Longest Common Subsequence (LCS) algorithm — the same core idea behind `git diff` and the list-reconciliation logic React uses when rendering `.map()` output.
+An interactive React + TypeScript demo of the Longest Common Subsequence (LCS) algorithm  the same core idea behind `git diff` and the list-reconciliation logic React uses when rendering `.map()` output.
 
 LiveDemo : https://diff-algorithm.vercel.app/
 
 ## Why this project
 
-I wanted to actually understand how tools I use every day — Git, React — decide what changed between two versions of something, instead of just trusting that they get it right. The naive approach (comparing items by position) breaks the moment something is inserted or removed from the middle of a list; LCS is the fix, and it's simple enough to implement from scratch and see exactly how it works.
+I wanted to actually understand how tools I use every day, Git, React decide what changed between two versions of something, instead of just trusting that they get it right. The naive approach (comparing items by position) breaks the moment something is inserted or removed from the middle of a list; LCS is the fix, and it's simple enough to implement from scratch and see exactly how it works.
 
 ## What it does
 
 - Two editable text areas (`before` / `after`), one item per line
-- A live diff view showing which lines are unchanged, removed, or added — computed with a from-scratch LCS implementation, not a library
+- A live diff view showing which lines are unchanged, removed, or added , computed with a from-scratch LCS implementation, not a library
 - A short explanation connecting the algorithm directly to why React needs a stable, real `key` (not array index) to correctly reconcile list items instead of treating a shifted item as an entirely new one
 
 ## Tech stack
@@ -19,7 +19,7 @@ I wanted to actually understand how tools I use every day — Git, React — dec
 - React (hooks only: `useState`, `useMemo`)
 - TypeScript
 - Tailwind CSS
-- No diff libraries — the LCS algorithm is implemented from scratch
+- No diff libraries , the LCS algorithm is implemented from scratch
 
 ## How it works
 
@@ -38,7 +38,7 @@ function diffLines(a: string[], b: string[]): DiffLine[] {
 }
 ```
 
-The DP table stores, for every pair of remaining suffixes, how long their longest common subsequence is. Walking it from the start produces the actual sequence of "same / removed / added" operations — this is a simplified version of what `git diff` runs internally (real Git uses the more optimized Myers diff algorithm, built on the same underlying idea).
+The DP table stores, for every pair of remaining suffixes, how long their longest common subsequence is. Walking it from the start produces the actual sequence of "same / removed / added" operations , this is a simplified version of what `git diff` runs internally (real Git uses the more optimized Myers diff algorithm, built on the same underlying idea).
 
 ## Running locally
 
